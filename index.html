@@ -193,7 +193,7 @@
       flex: 1;
       text-align: center;
       color: #999;
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 500;
     }
 
@@ -203,7 +203,7 @@
     }
 
     .try-plugin-section-title {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 600;
       color: #1a1a1a;
       margin-bottom: 10px;
@@ -223,8 +223,8 @@
       margin-bottom: 8px;
     }
 
-    .try-plugin-font-flag { font-size: 15px; }
-    .try-plugin-font-name { font-size: 13px; font-weight: 600; }
+    .try-plugin-font-flag { font-size: 16px; }
+    .try-plugin-font-name { font-size: 14px; font-weight: 600; }
 
     .try-plugin-font-select {
       width: 100%;
@@ -232,7 +232,7 @@
       border: none;
       border-radius: 8px;
       font-family: -apple-system, "SF Pro Display", "Apple SD Gothic Neo", sans-serif;
-      font-size: 13px;
+      font-size: 14px;
       color: #1a1a1a;
       background: #fff;
       cursor: pointer;
@@ -253,7 +253,7 @@
       border: none;
       border-radius: 16px;
       font-family: -apple-system, "SF Pro Display", "Apple SD Gothic Neo", sans-serif;
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       margin-top: 10px;
@@ -270,7 +270,7 @@
       color: #1a7a45;
       border-radius: 10px;
       padding: 13px 16px;
-      font-size: 13px;
+      font-size: 14px;
       margin-top: 10px;
     }
 
@@ -288,7 +288,7 @@
       border: none;
       border-radius: 13px;
       font-family: -apple-system, "SF Pro Display", "Apple SD Gothic Neo", sans-serif;
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 500;
       color: #555;
       cursor: pointer;
@@ -311,7 +311,7 @@
   <section class="try-section">
     <div class="try-container">
       <h1>Dual Type</h1>
-      <p>시안 속의 한글과 영문을 각각 다른 폰트로 적용</p>
+      <p>시안 속의 한글과 영문을 각각 다른 폰트로 적용하는 플러그인</p>
 
       <div class="try-layout">
         <!-- 텍스트 미리보기 카드 -->
@@ -350,8 +350,8 @@
               <div class="try-plugin-section-title">현재 폰트</div>
               <div style="background:#f7f7f8; border-radius:13px; padding:13px 16px;" id="tryCurrentFontBox">
                 <div style="display:flex; justify-content:space-between; padding:5px 0;">
-                  <span style="font-size:13px; font-weight:500;">Apple SD Gothic Neo</span>
-                  <span style="font-size:12px; color:#aaa;">Regular</span>
+                  <span style="font-size:14px; font-weight:500;">Apple SD Gothic Neo</span>
+                  <span style="font-size:13px; color:#aaa;">Regular</span>
                 </div>
               </div>
             </div>
@@ -486,16 +486,16 @@
         const box = document.getElementById('tryCurrentFontBox');
         if (krFontLabel === enFontLabel) {
           box.innerHTML = `<div style="display:flex;justify-content:space-between;padding:5px 0;">
-            <span style="font-size:13px;font-weight:500;">${krFontLabel}</span>
-            <span style="font-size:12px;color:#aaa;">Regular</span>
+            <span style="font-size:14px;font-weight:500;">${krFontLabel}</span>
+            <span style="font-size:13px;color:#aaa;">Regular</span>
           </div>`;
         } else {
           box.innerHTML = `<div style="display:flex;justify-content:space-between;padding:5px 0;">
-            <span style="font-size:13px;font-weight:500;">${krFontLabel}</span>
-            <span style="font-size:12px;color:#aaa;">Regular</span>
+            <span style="font-size:14px;font-weight:500;">${krFontLabel}</span>
+            <span style="font-size:13px;color:#aaa;">Regular</span>
           </div><div style="display:flex;justify-content:space-between;padding:5px 0;">
-            <span style="font-size:13px;font-weight:500;">${enFontLabel}</span>
-            <span style="font-size:12px;color:#aaa;">Regular</span>
+            <span style="font-size:14px;font-weight:500;">${enFontLabel}</span>
+            <span style="font-size:13px;color:#aaa;">Regular</span>
           </div>`;
         }
 
