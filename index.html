@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dual Type — Figma Plugin</title>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Noto+Sans+KR:wght@400;500;700&display=swap');
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f5f7;
+      color: #1a1a1a;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .try-section {
+      width: 100%;
+      padding: 80px 24px;
+      background: #f5f5f7;
+    }
+
+    .try-container {
+      max-width: 720px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .try-container h1 {
+      font-size: 40px;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      margin-bottom: 12px;
+    }
+
+    .try-container > p {
+      font-size: 16px;
+      color: #888;
+      margin-bottom: 48px;
+      line-height: 1.6;
+    }
+
+    .try-layout {
+      display: flex;
+      gap: 24px;
+      align-items: flex-start;
+    }
+
+    /* 텍스트 카드 */
+    .try-text-card {
+      flex: 1;
+      background: #fff;
+      border-radius: 20px;
+      padding: 32px;
+      text-align: left;
+      min-height: 340px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .try-text-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #aaa;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .try-highlight-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      line-height: 1;
+      color: #aaa;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: none;
+      opacity: 0.6;
+      transition: opacity 0.15s;
+    }
+    .try-highlight-toggle:hover { opacity: 1; }
+    .try-highlight-toggle.active { opacity: 1; color: #1a1a1a; }
+
+    #tryTextContent.highlight-off .applied { color: inherit !important; }
+    #tryTextContent.both-changed .try-kr,
+    #tryTextContent.both-changed .try-en { color: #0066ff; }
+    #tryTextContent.highlight-off.both-changed .try-kr,
+    #tryTextContent.highlight-off.both-changed .try-en { color: inherit !important; }
+
+    .try-text-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .try-text-line {
+      font-size: 22px;
+      line-height: 1.5;
+      letter-spacing: -0.01em;
+      transition: font-family 0.5s ease, color 0.4s ease;
+    }
+
+    .try-text-line.heading {
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    .try-text-line.sub {
+      font-size: 16px;
+      color: #888;
+      font-weight: 400;
+    }
+
+    .try-text-tags {
+      display: flex;
+      gap: 8px;
+      margin-top: auto;
+      padding-top: 20px;
+      flex-wrap: wrap;
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+
+    .try-text-tags.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .demo-tag {
+      display: inline-flex;
+      align-items: center;
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .demo-tag.kr {
+      background: #e8f0ff;
+      color: #0066ff;
+    }
+
+    .demo-tag.en {
+      background: #f0f0f2;
+      color: #888;
+    }
+
+    /* 미니 플러그인 패널 */
+    .try-plugin {
+      width: 260px;
+      flex-shrink: 0;
+      background: #2c2c2c;
+      border-radius: 12px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.12);
+      overflow: hidden;
+    }
+
+    .try-plugin-titlebar {
+      display: flex;
+      align-items: center;
+      padding: 10px 14px;
+      gap: 6px;
+    }
+
+    .try-plugin-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .try-plugin-dot.r { background: #ff5f57; }
+    .try-plugin-dot.y { background: #febc2e; }
+    .try-plugin-dot.g { background: #28c840; }
+
+    .try-plugin-title {
+      flex: 1;
+      text-align: center;
+      color: #999;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .try-plugin-body {
+      background: #fff;
+      padding: 16px;
+    }
+
+    .try-plugin-section-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: #1a1a1a;
+      margin-bottom: 8px;
+    }
+
+    .try-plugin-font-card {
+      background: #f7f7f8;
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 8px;
+    }
+
+    .try-plugin-font-header {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+
+    .try-plugin-font-flag { font-size: 14px; }
+    .try-plugin-font-name { font-size: 12px; font-weight: 600; }
+
+    .try-plugin-font-select {
+      width: 100%;
+      padding: 7px 10px;
+      border: none;
+      border-radius: 6px;
+      font-family: "Pretendard", sans-serif;
+      font-size: 12px;
+      color: #1a1a1a;
+      background: #fff;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 6L8 11L13 6' stroke='%23999' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      padding-right: 24px;
+      outline: none;
+    }
+
+    .try-plugin-apply {
+      width: 100%;
+      padding: 14px;
+      background: #1a1a1a;
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: "Pretendard", sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: background 0.15s, transform 0.1s;
+    }
+    .try-plugin-apply:hover { background: #333; }
+    .try-plugin-apply:active { background: #000; transform: scale(0.97); }
+
+    .try-plugin-result {
+      display: none;
+      align-items: center;
+      gap: 6px;
+      background: #f5faf7;
+      color: #1a7a45;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 12px;
+      margin-top: 8px;
+    }
+
+    .try-plugin-result.show { display: flex; }
+
+    .try-kr { transition: font-family 0.05s ease, color 0.3s ease; }
+    .try-en { transition: font-family 0.05s ease, color 0.3s ease; }
+    .try-kr.applied { color: #0066ff; }
+    .try-en.applied { color: #0066ff; }
+
+    .try-reset-btn {
+      margin-top: 20px;
+      padding: 14px 16px;
+      background: rgba(0, 0, 0, 0.05);
+      border: none;
+      border-radius: 10px;
+      font-family: "Pretendard", sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      width: 100%;
+    }
+    .try-reset-btn:hover { background: rgba(0, 0, 0, 0.09); color: #333; }
+
+    @media (max-width: 640px) {
+      .try-layout { flex-direction: column-reverse; }
+      .try-plugin { width: 100%; }
+      .try-text-line { font-size: 18px; }
+      .try-text-line.heading { font-size: 22px; }
+      .try-container h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <section class="try-section">
+    <div class="try-container">
+      <h1>Dual Type</h1>
+      <p>시안 속의 한글과 영문을 각각 다른 폰트로 적용</p>
+
+      <div class="try-layout">
+        <!-- 텍스트 미리보기 카드 -->
+        <div class="try-text-card">
+          <div class="try-text-label">
+            <span>Preview</span>
+            <button class="try-highlight-toggle active" id="highlightToggle" onclick="toggleHighlight()">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:block;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              <span id="highlightLabel">변경부분 끄기</span>
+            </button>
+          </div>
+          <div class="try-text-content" id="tryTextContent">
+            <div class="try-text-line heading" data-text="Creative Direction 가이드"></div>
+            <div class="try-text-line" data-text="브랜드 Identity를 구축하는 핵심 원칙과 Design System 활용법"></div>
+            <div class="try-text-line sub" data-text="Typography는 사용자 경험의 기반입니다. 좋은 타이포그래피는 Reading Flow를 자연스럽게 만들어줍니다."></div>
+          </div>
+          <div class="try-text-tags" id="tryTags">
+            <span class="demo-tag kr" id="tryTagEn"></span>
+            <span class="demo-tag kr" id="tryTagKr"></span>
+          </div>
+          <button class="try-reset-btn" id="tryResetBtn" style="display:none;" onclick="tryReset()">초기화</button>
+        </div>
+
+        <!-- 미니 플러그인 패널 -->
+        <div class="try-plugin">
+          <div class="try-plugin-titlebar">
+            <div class="try-plugin-dot r"></div>
+            <div class="try-plugin-dot y"></div>
+            <div class="try-plugin-dot g"></div>
+            <span class="try-plugin-title">Dual Type</span>
+            <div style="width:36px"></div>
+          </div>
+          <div class="try-plugin-body">
+            <!-- 현재 폰트 -->
+            <div style="margin-bottom:14px;">
+              <div class="try-plugin-section-title">현재 폰트</div>
+              <div style="background:#f7f7f8; border-radius:10px; padding:10px 12px;" id="tryCurrentFontBox">
+                <div style="display:flex; justify-content:space-between; padding:4px 0;">
+                  <span style="font-size:12px; font-weight:500;">Apple SD Gothic Neo</span>
+                  <span style="font-size:11px; color:#aaa;">Regular</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="try-plugin-section-title">바꿀 폰트</div>
+
+            <div class="try-plugin-font-card">
+              <div class="try-plugin-font-header">
+                <span class="try-plugin-font-flag">🇺🇸</span>
+                <span class="try-plugin-font-name">영문</span>
+              </div>
+              <select class="try-plugin-font-select" id="tryEnFont">
+                <option value="-apple-system, 'SF Pro Display', sans-serif">SF Pro Display</option>
+                <option value="'Inter', sans-serif">Inter</option>
+                <option value="'Georgia', serif">Georgia</option>
+                <option value="'Courier New', monospace">Courier New</option>
+              </select>
+            </div>
+
+            <div class="try-plugin-font-card">
+              <div class="try-plugin-font-header">
+                <span class="try-plugin-font-flag">🇰🇷</span>
+                <span class="try-plugin-font-name">국문</span>
+              </div>
+              <select class="try-plugin-font-select" id="tryKrFont">
+                <option value="'Apple SD Gothic Neo', sans-serif" selected>Apple SD Gothic Neo</option>
+                <option value="'Pretendard', sans-serif">Pretendard</option>
+                <option value="'Noto Sans KR', sans-serif">Noto Sans KR</option>
+                <option value="serif">명조 (Serif)</option>
+              </select>
+            </div>
+
+            <button class="try-plugin-apply" onclick="tryApply()">선택 레이어에 적용</button>
+            <div class="try-plugin-result" id="tryResult">
+              <span>&#10003;</span>
+              <span id="tryResultText"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function isKorean(char) {
+      const code = char.charCodeAt(0);
+      return (code >= 0xAC00 && code <= 0xD7A3) ||
+             (code >= 0x1100 && code <= 0x11FF) ||
+             (code >= 0x3130 && code <= 0x318F);
+    }
+
+    const DEFAULT_KR_FONT = "'Apple SD Gothic Neo', sans-serif";
+    const DEFAULT_EN_FONT = "'Apple SD Gothic Neo', sans-serif";
+
+    let lastAppliedKr = DEFAULT_KR_FONT;
+    let lastAppliedEn = DEFAULT_EN_FONT;
+    let highlightOn = true;
+
+    function toggleHighlight() {
+      highlightOn = !highlightOn;
+      const btn = document.getElementById('highlightToggle');
+      const content = document.getElementById('tryTextContent');
+      btn.classList.toggle('active', highlightOn);
+      content.classList.toggle('highlight-off', !highlightOn);
+      document.getElementById('highlightLabel').textContent = highlightOn ? '변경부분 끄기' : '변경부분 보기';
+    }
+
+    function initTryText() {
+      document.querySelectorAll('.try-text-line').forEach(line => {
+        const text = line.getAttribute('data-text');
+        let html = '';
+        for (const char of text) {
+          if (isKorean(char)) {
+            html += `<span class="try-kr" style="font-family:${DEFAULT_KR_FONT}">${char}</span>`;
+          } else {
+            html += `<span class="try-en" style="font-family:${DEFAULT_EN_FONT}">${char}</span>`;
+          }
+        }
+        line.innerHTML = html;
+      });
+    }
+
+    function tryApply() {
+      const krFont = document.getElementById('tryKrFont');
+      const enFont = document.getElementById('tryEnFont');
+      const krFontValue = krFont.value;
+      const enFontValue = enFont.value;
+      const krFontLabel = krFont.options[krFont.selectedIndex].text;
+      const enFontLabel = enFont.options[enFont.selectedIndex].text;
+
+      const krChanged = krFontValue !== lastAppliedKr;
+      const enChanged = enFontValue !== lastAppliedEn;
+      const bothChanged = krChanged && enChanged;
+      const content = document.getElementById('tryTextContent');
+      content.classList.toggle('both-changed', bothChanged);
+
+      const krChars = document.querySelectorAll('#tryTextContent .try-kr');
+      let delay = 0;
+      krChars.forEach(span => {
+        setTimeout(() => {
+          span.style.fontFamily = krFontValue;
+          span.classList.remove('applied');
+          if (krChanged && !bothChanged) span.classList.add('applied');
+        }, delay);
+        delay += 12;
+      });
+
+      const enChars = document.querySelectorAll('#tryTextContent .try-en');
+      delay = 0;
+      enChars.forEach(span => {
+        setTimeout(() => {
+          span.style.fontFamily = enFontValue;
+          span.classList.remove('applied');
+          if (enChanged && !bothChanged) span.classList.add('applied');
+        }, delay);
+        delay += 12;
+      });
+
+      setTimeout(() => {
+        lastAppliedKr = krFontValue;
+        lastAppliedEn = enFontValue;
+
+        const tags = document.getElementById('tryTags');
+        const tagKr = document.getElementById('tryTagKr');
+        const tagEn = document.getElementById('tryTagEn');
+        tagKr.textContent = '국문 — ' + krFontLabel;
+        tagEn.textContent = '영문 — ' + enFontLabel;
+        tagKr.className = krChanged ? 'demo-tag kr' : 'demo-tag en';
+        tagEn.className = enChanged ? 'demo-tag kr' : 'demo-tag en';
+        tags.classList.add('visible');
+
+        // 현재 폰트 박스 업데이트 (같으면 1줄, 다르면 2줄)
+        const box = document.getElementById('tryCurrentFontBox');
+        if (krFontLabel === enFontLabel) {
+          box.innerHTML = `<div style="display:flex;justify-content:space-between;padding:4px 0;">
+            <span style="font-size:12px;font-weight:500;">${krFontLabel}</span>
+            <span style="font-size:11px;color:#aaa;">Regular</span>
+          </div>`;
+        } else {
+          box.innerHTML = `<div style="display:flex;justify-content:space-between;padding:4px 0;">
+            <span style="font-size:12px;font-weight:500;">${krFontLabel}</span>
+            <span style="font-size:11px;color:#aaa;">Regular</span>
+          </div><div style="display:flex;justify-content:space-between;padding:4px 0;">
+            <span style="font-size:12px;font-weight:500;">${enFontLabel}</span>
+            <span style="font-size:11px;color:#aaa;">Regular</span>
+          </div>`;
+        }
+
+        document.getElementById('tryResultText').textContent = '완료! 3개 텍스트 레이어 처리됨';
+        document.getElementById('tryResult').classList.add('show');
+        document.getElementById('tryResetBtn').style.display = '';
+      }, delay + 100);
+    }
+
+    function tryReset() {
+      lastAppliedKr = DEFAULT_KR_FONT;
+      lastAppliedEn = DEFAULT_EN_FONT;
+      document.getElementById('tryTextContent').classList.remove('both-changed');
+      document.querySelectorAll('#tryTextContent .try-kr').forEach(span => {
+        span.style.fontFamily = DEFAULT_KR_FONT;
+        span.classList.remove('applied');
+      });
+      document.querySelectorAll('#tryTextContent .try-en').forEach(span => {
+        span.style.fontFamily = DEFAULT_EN_FONT;
+        span.classList.remove('applied');
+      });
+      document.getElementById('tryTags').classList.remove('visible');
+      document.getElementById('tryResult').classList.remove('show');
+      document.getElementById('tryResetBtn').style.display = 'none';
+    }
+
+    initTryText();
+  </script>
+
+</body>
+</html>
