@@ -35,14 +35,14 @@
     }
 
     .try-container h1 {
-      font-size: 52px;
+      font-size: 40px;
       font-weight: 800;
       letter-spacing: -0.03em;
       margin-bottom: 16px;
     }
 
     .try-container > p {
-      font-size: 21px;
+      font-size: 16px;
       color: #888;
       margin-bottom: 62px;
       line-height: 1.6;
@@ -67,7 +67,7 @@
     }
 
     .try-text-label {
-      font-size: 14px;
+      font-size: 11px;
       font-weight: 700;
       color: #aaa;
       text-transform: uppercase;
@@ -85,10 +85,10 @@
       padding: 0;
       display: flex;
       align-items: center;
-      gap: 5px;
+      gap: 4px;
       line-height: 1;
       color: #aaa;
-      font-size: 14px;
+      font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.05em;
       text-transform: none;
@@ -112,19 +112,19 @@
     }
 
     .try-text-line {
-      font-size: 29px;
+      font-size: 22px;
       line-height: 1.5;
       letter-spacing: -0.01em;
       transition: font-family 0.5s ease, color 0.4s ease;
     }
 
     .try-text-line.heading {
-      font-size: 36px;
+      font-size: 28px;
       font-weight: 700;
     }
 
     .try-text-line.sub {
-      font-size: 21px;
+      font-size: 16px;
       color: #888;
       font-weight: 400;
     }
@@ -148,9 +148,9 @@
     .demo-tag {
       display: inline-flex;
       align-items: center;
-      padding: 7px 13px;
+      padding: 5px 10px;
       border-radius: 26px;
-      font-size: 14px;
+      font-size: 11px;
       font-weight: 600;
     }
 
@@ -194,7 +194,7 @@
       flex: 1;
       text-align: center;
       color: #999;
-      font-size: 14px;
+      font-size: 11px;
       font-weight: 500;
     }
 
@@ -204,7 +204,7 @@
     }
 
     .try-plugin-section-title {
-      font-size: 16px;
+      font-size: 12px;
       font-weight: 600;
       color: #1a1a1a;
       margin-bottom: 10px;
@@ -224,8 +224,8 @@
       margin-bottom: 8px;
     }
 
-    .try-plugin-font-flag { font-size: 18px; }
-    .try-plugin-font-name { font-size: 16px; font-weight: 600; }
+    .try-plugin-font-flag { font-size: 14px; }
+    .try-plugin-font-name { font-size: 12px; font-weight: 600; }
 
     .try-plugin-font-select {
       width: 100%;
@@ -233,7 +233,7 @@
       border: none;
       border-radius: 8px;
       font-family: "Pretendard", sans-serif;
-      font-size: 16px;
+      font-size: 12px;
       color: #1a1a1a;
       background: #fff;
       cursor: pointer;
@@ -254,7 +254,7 @@
       border: none;
       border-radius: 16px;
       font-family: "Pretendard", sans-serif;
-      font-size: 17px;
+      font-size: 13px;
       font-weight: 600;
       cursor: pointer;
       margin-top: 10px;
@@ -271,7 +271,7 @@
       color: #1a7a45;
       border-radius: 10px;
       padding: 13px 16px;
-      font-size: 16px;
+      font-size: 12px;
       margin-top: 10px;
     }
 
@@ -289,7 +289,7 @@
       border: none;
       border-radius: 13px;
       font-family: "Pretendard", sans-serif;
-      font-size: 17px;
+      font-size: 13px;
       font-weight: 500;
       color: #555;
       cursor: pointer;
@@ -350,9 +350,9 @@
             <div style="margin-bottom:18px;">
               <div class="try-plugin-section-title">현재 폰트</div>
               <div style="background:#f7f7f8; border-radius:13px; padding:13px 16px;" id="tryCurrentFontBox">
-                <div style="display:flex; justify-content:space-between; padding:5px 0;">
-                  <span style="font-size:16px; font-weight:500;">Apple SD Gothic Neo</span>
-                  <span style="font-size:14px; color:#aaa;">Regular</span>
+                <div style="display:flex; justify-content:space-between; padding:4px 0;">
+                  <span style="font-size:12px; font-weight:500;">Apple SD Gothic Neo</span>
+                  <span style="font-size:11px; color:#aaa;">Regular</span>
                 </div>
               </div>
             </div>
@@ -484,20 +484,19 @@
         tagEn.className = enChanged ? 'demo-tag kr' : 'demo-tag en';
         tags.classList.add('visible');
 
-        // 현재 폰트 박스 업데이트 (같으면 1줄, 다르면 2줄)
         const box = document.getElementById('tryCurrentFontBox');
         if (krFontLabel === enFontLabel) {
-          box.innerHTML = `<div style="display:flex;justify-content:space-between;padding:5px 0;">
-            <span style="font-size:16px;font-weight:500;">${krFontLabel}</span>
-            <span style="font-size:14px;color:#aaa;">Regular</span>
+          box.innerHTML = `<div style="display:flex;justify-content:space-between;padding:4px 0;">
+            <span style="font-size:12px;font-weight:500;">${krFontLabel}</span>
+            <span style="font-size:11px;color:#aaa;">Regular</span>
           </div>`;
         } else {
-          box.innerHTML = `<div style="display:flex;justify-content:space-between;padding:5px 0;">
-            <span style="font-size:16px;font-weight:500;">${krFontLabel}</span>
-            <span style="font-size:14px;color:#aaa;">Regular</span>
-          </div><div style="display:flex;justify-content:space-between;padding:5px 0;">
-            <span style="font-size:16px;font-weight:500;">${enFontLabel}</span>
-            <span style="font-size:14px;color:#aaa;">Regular</span>
+          box.innerHTML = `<div style="display:flex;justify-content:space-between;padding:4px 0;">
+            <span style="font-size:12px;font-weight:500;">${krFontLabel}</span>
+            <span style="font-size:11px;color:#aaa;">Regular</span>
+          </div><div style="display:flex;justify-content:space-between;padding:4px 0;">
+            <span style="font-size:12px;font-weight:500;">${enFontLabel}</span>
+            <span style="font-size:11px;color:#aaa;">Regular</span>
           </div>`;
         }
 
