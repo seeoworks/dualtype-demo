@@ -311,7 +311,7 @@
   <section class="try-section">
     <div class="try-container">
       <h1>Dual Type</h1>
-      <p>시안 속의 한글과 영문을 각각 다른 폰트로 적용하는 플러그인</p>
+      <p>사용된 폰트 정보를 한눈에 보여주고, 다국어 폰트를 한번에 언어별로 변경해주는 플러그인</p>
 
       <div class="try-layout">
         <!-- 텍스트 미리보기 카드 -->
@@ -408,6 +408,8 @@
 
     let lastAppliedKr = DEFAULT_KR_FONT;
     let lastAppliedEn = DEFAULT_EN_FONT;
+    let lastAppliedKrLabel = 'Apple SD Gothic Neo';
+    let lastAppliedEnLabel = 'Apple SD Gothic Neo';
     let highlightOn = true;
 
     function toggleHighlight() {
@@ -417,6 +419,39 @@
       btn.classList.toggle('active', highlightOn);
       content.classList.toggle('highlight-off', !highlightOn);
       document.getElementById('highlightLabel').textContent = highlightOn ? '변경부분 끄기' : '변경부분 보기';
+    }
+
+    function getWeightLabel(weight) {
+      const w = parseInt(weight);
+      if (w >= 700) return 'Bold';
+      if (w >= 600) return 'SemiBold';
+      if (w >= 500) return 'Medium';
+      return 'Regular';
+    }
+
+    function updateFontBox(krLabel, enLabel) {
+      const seen = new Set();
+      const entries = [];
+      document.querySelectorAll('#tryTextContent .try-text-line').forEach(line => {
+        const weight = getComputedStyle(line).fontWeight;
+        const weightLabel = getWeightLabel(weight);
+        const fontLabels = new Set();
+        if (line.querySelector('.try-kr')) fontLabels.add(krLabel);
+        if (line.querySelector('.try-en')) fontLabels.add(enLabel);
+        fontLabels.forEach(font => {
+          const key = font + '|' + weight;
+          if (!seen.has(key)) {
+            seen.add(key);
+            entries.push({ font, weightLabel, weight: parseInt(weight) });
+          }
+        });
+      });
+      entries.sort((a, b) => b.weight - a.weight || a.font.localeCompare(b.font));
+      const box = document.getElementById('tryCurrentFontBox');
+      box.innerHTML = entries.map(e => `<div style="display:flex;justify-content:space-between;padding:5px 0;">
+            <span style="font-size:14px;font-weight:500;">${e.font}</span>
+            <span style="font-size:13px;color:#aaa;">${e.weightLabel}</span>
+          </div>`).join('');
     }
 
     function initTryText() {
@@ -483,21 +518,9 @@
         tagEn.className = enChanged ? 'demo-tag kr' : 'demo-tag en';
         tags.classList.add('visible');
 
-        const box = document.getElementById('tryCurrentFontBox');
-        if (krFontLabel === enFontLabel) {
-          box.innerHTML = `<div style="display:flex;justify-content:space-between;padding:5px 0;">
-            <span style="font-size:14px;font-weight:500;">${krFontLabel}</span>
-            <span style="font-size:13px;color:#aaa;">Regular</span>
-          </div>`;
-        } else {
-          box.innerHTML = `<div style="display:flex;justify-content:space-between;padding:5px 0;">
-            <span style="font-size:14px;font-weight:500;">${krFontLabel}</span>
-            <span style="font-size:13px;color:#aaa;">Regular</span>
-          </div><div style="display:flex;justify-content:space-between;padding:5px 0;">
-            <span style="font-size:14px;font-weight:500;">${enFontLabel}</span>
-            <span style="font-size:13px;color:#aaa;">Regular</span>
-          </div>`;
-        }
+        lastAppliedKrLabel = krFontLabel;
+        lastAppliedEnLabel = enFontLabel;
+        updateFontBox(krFontLabel, enFontLabel);
 
         document.getElementById('tryResultText').textContent = '완료! 3개 텍스트 레이어 처리됨';
         document.getElementById('tryResult').classList.add('show');
@@ -523,6 +546,7 @@
     }
 
     initTryText();
+    updateFontBox(lastAppliedKrLabel, lastAppliedEnLabel);
   </script>
 
 </body>
