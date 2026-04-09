@@ -430,28 +430,26 @@
     }
 
     function updateFontBox(krLabel, enLabel) {
-      const seen = new Set();
-      const entries = [];
+      // font → Set of weights
+      const fontWeights = new Map();
       document.querySelectorAll('#tryTextContent .try-text-line').forEach(line => {
-        const weight = getComputedStyle(line).fontWeight;
-        const weightLabel = getWeightLabel(weight);
+        const weight = parseInt(getComputedStyle(line).fontWeight);
         const fontLabels = new Set();
         if (line.querySelector('.try-kr')) fontLabels.add(krLabel);
         if (line.querySelector('.try-en')) fontLabels.add(enLabel);
         fontLabels.forEach(font => {
-          const key = font + '|' + weight;
-          if (!seen.has(key)) {
-            seen.add(key);
-            entries.push({ font, weightLabel, weight: parseInt(weight) });
-          }
+          if (!fontWeights.has(font)) fontWeights.set(font, new Set());
+          fontWeights.get(font).add(weight);
         });
       });
-      entries.sort((a, b) => b.weight - a.weight || a.font.localeCompare(b.font));
       const box = document.getElementById('tryCurrentFontBox');
-      box.innerHTML = entries.map(e => `<div style="display:flex;justify-content:space-between;padding:5px 0;">
-            <span style="font-size:14px;font-weight:500;">${e.font}</span>
-            <span style="font-size:13px;color:#aaa;">${e.weightLabel}</span>
-          </div>`).join('');
+      box.innerHTML = [...fontWeights.entries()].map(([font, weights]) => {
+        const labels = [...weights].sort((a, b) => a - b).map(getWeightLabel).join(', ');
+        return `<div style="display:flex;justify-content:space-between;padding:5px 0;">
+            <span style="font-size:14px;font-weight:500;">${font}</span>
+            <span style="font-size:13px;color:#aaa;">${labels}</span>
+          </div>`;
+      }).join('');
     }
 
     function initTryText() {
